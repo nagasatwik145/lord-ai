@@ -6,7 +6,7 @@ import { Send, Loader2, Brain, Zap, Code, Sparkles, Gauge } from "lucide-react";
 import { AppShell } from "@/components/lord/AppShell";
 import { HudPanel } from "@/components/lord/HudPanel";
 import { cn } from "@/lib/utils";
-import type { LordMode } from "@/lib/ai-gateway.server";
+import type { LordMode } from "@/lib/lord-config";
 
 export const Route = createFileRoute("/chat")({
   head: () => ({ meta: [{ title: "LORD — Chat" }, { name: "description", content: "Talk to LORD AI." }] }),

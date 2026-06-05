@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/lord/AppShell";
 import { HudPanel } from "@/components/lord/HudPanel";
 import { usePersistedState } from "@/lib/use-persisted-state";
-import { LORD_MODELS } from "@/lib/ai-gateway.server";
+import { LORD_MODELS } from "@/lib/lord-config";
 import { Trash2 } from "lucide-react";
 
 export const Route = createFileRoute("/settings")({
