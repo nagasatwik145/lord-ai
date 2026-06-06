@@ -14,6 +14,7 @@ import {
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { ParticleField } from "./ParticleField";
+import { WakeIndicator } from "./WakeIndicator";
 
 const NAV = [
   { to: "/", label: "Command", icon: LayoutDashboard },
@@ -122,6 +123,8 @@ export function AppShell({ children }: { children: ReactNode }) {
           })}
         </ul>
       </nav>
+
+      <WakeIndicator />
     </div>
   );
 }

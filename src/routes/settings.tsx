@@ -38,13 +38,16 @@ function SettingsPage() {
           <p className="mt-2 text-xs text-muted-foreground">Active model is auto-selected per task type. Override in the Chat module.</p>
         </HudPanel>
 
-        <HudPanel title="Voice">
+        <HudPanel title="Voice & Wake Word">
           <label className="text-xs uppercase tracking-wider text-muted-foreground">Speech rate: {voiceRate.toFixed(2)}x</label>
           <input type="range" min={0.5} max={2} step={0.05} value={voiceRate} onChange={(e) => setVoiceRate(+e.target.value)} className="mt-2 w-full accent-[var(--hud)]" />
           <label className="mt-4 flex items-center gap-2 text-sm">
             <input type="checkbox" checked={autoSpeak} onChange={(e) => setAutoSpeak(e.target.checked)} className="accent-[var(--hud)]" />
             Auto-speak responses in Voice mode
           </label>
+          <p className="mt-4 text-xs text-muted-foreground">
+            Toggle the always-on "Hey Lord" wake word from the mic badge in the corner of any page. It listens app-wide while LORD is open.
+          </p>
         </HudPanel>
 
         <HudPanel title="Theme">
