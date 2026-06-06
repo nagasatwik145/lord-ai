@@ -48,7 +48,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             </div>
             <div className="leading-tight">
               <div className="font-display text-lg font-bold tracking-wider gradient-text">LORD</div>
-              <div className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">AI · OS</div>
+              <div className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">AI</div>
             </div>
           </Link>
 
