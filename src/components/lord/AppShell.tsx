@@ -123,6 +123,8 @@ export function AppShell({ children }: { children: ReactNode }) {
           })}
         </ul>
       </nav>
+
+      <WakeIndicator />
     </div>
   );
 }
