@@ -2,10 +2,10 @@
 
 export const LORD_MODELS = {
   fast: "google/gemini-2.5-flash-lite",
-  balanced: "google/gemini-3-flash-preview",
-  reasoning: "google/gemini-3.1-pro-preview",
-  coding: "openai/gpt-5",
-  creative: "openai/gpt-5",
+  balanced: "google/gemini-2.5-flash-lite",
+  reasoning: "google/gemini-2.5-flash",
+  coding: "deepseek/deepseek-chat-v3-0324:free",
+  creative: "deepseek/deepseek-chat-v3-0324:free",
 } as const;
 
 export type LordMode = keyof typeof LORD_MODELS;

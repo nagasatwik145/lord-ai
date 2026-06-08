@@ -12,9 +12,9 @@ import type { Task, Conversation, Memory } from "@/lib/lord-store";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "LORD AI OS — Command Center" },
+      { title: "LORD AI— Command Center" },
       { name: "description", content: "Intelligence Beyond Assistance. Your personal AI operating system." },
-      { property: "og:title", content: "LORD AI OS" },
+      { property: "og:title", content: "LORD AI" },
       { property: "og:description", content: "Intelligence Beyond Assistance." },
     ],
   }),

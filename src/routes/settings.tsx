@@ -62,9 +62,9 @@ function SettingsPage() {
         </HudPanel>
 
         <HudPanel title="About" className="md:col-span-2">
-          <div className="font-display text-xl gradient-text text-glow">LORD AI OS v1.0.0</div>
+          <div className="font-display text-xl gradient-text text-glow">LORD AI</div>
           <p className="mt-1 text-sm text-muted-foreground">Legendary Omni-intelligent Responsive Director.</p>
-          <p className="mt-3 text-xs font-mono text-muted-foreground">Built for a single operator. Powered by Lovable AI Gateway routing GPT, Gemini, Claude, and DeepSeek.</p>
+          <p className="mt-3 text-xs font-mono text-muted-foreground">Built for a single operator.</p>
         </HudPanel>
       </div>
     </AppShell>

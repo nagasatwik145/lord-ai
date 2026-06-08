@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { convertToModelMessages, streamText, type UIMessage } from "ai";
 import {
-  createLovableAiGatewayProvider,
+  createOpenRouterProvider,
   LORD_MODELS,
   LORD_SYSTEM_PROMPT,
   type LordMode,
@@ -11,9 +11,9 @@ export const Route = createFileRoute("/api/chat")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        const apiKey = process.env.LOVABLE_API_KEY;
+        const apiKey = process.env.OPENROUTER_API_KEY;
         if (!apiKey) {
-          return new Response("Missing LOVABLE_API_KEY", { status: 500 });
+          return new Response("Missing OPENROUTER_API_KEY", { status: 500 });
         }
 
         const body = (await request.json()) as {
@@ -24,7 +24,10 @@ export const Route = createFileRoute("/api/chat")({
         const modelId = LORD_MODELS[mode];
 
         try {
-          const gateway = createLovableAiGatewayProvider(apiKey);
+          const gateway = createOpenRouterProvider(apiKey);
+          console.log("Using OpenRouter");
+          console.log("Model:", modelId);
+          console.log("Key exists:", !!apiKey);
           const result = streamText({
             model: gateway(modelId),
             system: LORD_SYSTEM_PROMPT,
