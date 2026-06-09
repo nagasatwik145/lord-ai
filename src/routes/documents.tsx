@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Upload, Loader2, FileText } from "lucide-react";
 import { AppShell } from "@/components/lord/AppShell";
 import { HudPanel } from "@/components/lord/HudPanel";
+import { getApiBaseUrl } from "@/lib/api-config";
 
 export const Route = createFileRoute("/documents")({
   head: () => ({ meta: [{ title: "LORD — Document Intelligence" }] }),
@@ -35,7 +36,7 @@ function DocsPage() {
       : task === "notes" ? `Extract detailed structured notes (headings, bullets, definitions, examples) from:\n\n---\n${text}`
       : `Answer this question using ONLY the document below. If unknown, say so.\n\nQuestion: ${question}\n\n---\n${text}`;
     try {
-      const res = await fetch("/api/chat", {
+      const res = await fetch(`${getApiBaseUrl()}/api/chat`, {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ mode: "reasoning", messages: [{ id: "u", role: "user", parts: [{ type: "text", text: prompt }] }] }),
       });

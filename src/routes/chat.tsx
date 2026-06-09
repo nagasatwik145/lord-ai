@@ -4,6 +4,7 @@ import { DefaultChatTransport } from "ai";
 import { useState, useRef, useEffect } from "react";
 import { Send, Loader2, Brain, Zap, Code, Sparkles, Gauge } from "lucide-react";
 import { AppShell } from "@/components/lord/AppShell";
+import { getApiBaseUrl } from "@/lib/api-config";
 import { HudPanel } from "@/components/lord/HudPanel";
 import { cn } from "@/lib/utils";
 import type { LordMode } from "@/lib/lord-config";
@@ -27,7 +28,7 @@ function ChatPage() {
   const scrollerRef = useRef<HTMLDivElement>(null);
 
   const { messages, sendMessage, status, error } = useChat({
-    transport: new DefaultChatTransport({ api: "/api/chat", body: () => ({ mode }) }),
+    transport: new DefaultChatTransport({ api: `${getApiBaseUrl()}/api/chat`, body: () => ({ mode }) }),
   });
 
   useEffect(() => {

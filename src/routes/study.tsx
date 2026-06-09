@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Loader2, BookOpen, Layers, ListChecks, FileQuestion, NotebookPen, CalendarRange } from "lucide-react";
 import { AppShell } from "@/components/lord/AppShell";
 import { HudPanel } from "@/components/lord/HudPanel";
+import { getApiBaseUrl } from "@/lib/api-config";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/study")({
@@ -34,7 +35,7 @@ function StudyPage() {
     setOutput("");
     const def = TOOLS.find((x) => x.id === tool)!;
     try {
-      const res = await fetch("/api/chat", {
+      const res = await fetch(`${getApiBaseUrl()}/api/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

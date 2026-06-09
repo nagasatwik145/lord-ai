@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
+import { getApiBaseUrl } from "@/lib/api-config";
 
 export type WakeStatus = "off" | "listening" | "heard" | "thinking" | "speaking" | "unsupported";
 
@@ -89,7 +90,7 @@ export function WakeWordProvider({ children }: { children: ReactNode }) {
     setStatus("thinking");
     setReply("");
     try {
-      const res = await fetch("/api/chat", {
+      const res = await fetch(`${getApiBaseUrl()}/api/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

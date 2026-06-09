@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Loader2, Search, BookOpen } from "lucide-react";
 import { AppShell } from "@/components/lord/AppShell";
 import { HudPanel } from "@/components/lord/HudPanel";
+import { getApiBaseUrl } from "@/lib/api-config";
 
 export const Route = createFileRoute("/research")({
   head: () => ({ meta: [{ title: "LORD — Research" }] }),
@@ -23,7 +24,7 @@ function ResearchPage() {
       ? `Produce a DEEP research brief on: "${q}".\n\nStructure:\n1. Executive Summary (3 lines)\n2. Background & Context\n3. Key Concepts (with definitions)\n4. Current State of the Art\n5. Major Debates / Open Questions\n6. Notable Sources (titles + 1-line each)\n7. Recommended Next Reading\n8. TL;DR\n\nBe rigorous, cite where appropriate, distinguish established consensus from frontier claims.`
       : `Give a concise research brief on: "${q}".\nInclude: a 4-line summary, 5 key facts, 3 different perspectives, and 5 suggested sources to investigate.`;
     try {
-      const res = await fetch("/api/chat", {
+      const res = await fetch(`${getApiBaseUrl()}/api/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ mode: "reasoning", messages: [{ id: "u", role: "user", parts: [{ type: "text", text: prompt }] }] }),
