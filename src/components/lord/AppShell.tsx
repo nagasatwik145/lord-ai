@@ -15,6 +15,7 @@ import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { ParticleField } from "./ParticleField";
 import { WakeIndicator } from "./WakeIndicator";
+import { HealthHud } from "./HealthHud";
 
 const NAV = [
   { to: "/", label: "Command", icon: LayoutDashboard },
@@ -76,6 +77,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
       {/* Side rail (desktop) */}
       <nav className="fixed left-3 top-1/2 z-40 hidden -translate-y-1/2 md:block">
+        <HealthHud />
         <ul className="hud-panel flex flex-col gap-1 p-2">
           {NAV.map(({ to, label, icon: Icon }) => {
             const active = to === "/" ? path === "/" : path.startsWith(to);

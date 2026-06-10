@@ -12,6 +12,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { WakeWordProvider } from "../components/lord/WakeWordProvider";
+import { AppContextProvider } from "../components/lord/AppContextProvider";
 
 function NotFoundComponent() {
   return (
@@ -120,10 +121,12 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <WakeWordProvider>
-        {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-        <Outlet />
-      </WakeWordProvider>
+      <AppContextProvider>
+        <WakeWordProvider>
+          {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+          <Outlet />
+        </WakeWordProvider>
+      </AppContextProvider>
     </QueryClientProvider>
   );
 }
