@@ -106,7 +106,7 @@ export function WakeWordProvider({ children }: { children: ReactNode }) {
       setStatus("thinking");
       setReply("");
       try {
-        const res = await fetch(`${getApiBaseUrl()}/api/chat`, {
+        const res = await fetch("/api/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

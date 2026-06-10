@@ -32,7 +32,7 @@ function ChatPage() {
   
   const { messages, sendMessage, status, error } = useChat({
     transport: new DefaultChatTransport({
-      api: `${getApiBaseUrl()}/api/chat`,
+      api: "/api/chat", // Force local route to bypass any external backend issues
       body: () => ({ 
         mode,
         context: {
