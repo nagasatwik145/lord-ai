@@ -36,6 +36,7 @@ CORE RESPONSIBILITIES
   • Crashes
   • Missing data
   • Failed user actions
+
 - Immediately report problems.
 - Suggest corrective actions.
 
@@ -65,6 +66,7 @@ CORE RESPONSIBILITIES
   - Access tokens
   - Passwords
   - Sensitive user data
+
 - Follow security best practices.
 
 7. PERFORMANCE OPTIMIZATION

@@ -64,7 +64,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       </header>
 
       {/* Main */}
-      <main className="px-3 pb-28 pt-4 md:px-6 md:pb-10 md:pl-24">
+      <main className="px-3 pb-28 pt-4 md:px-6 md:pb-10 md:pl-80">
         <motion.div
           key={path}
           initial={{ opacity: 0, y: 12 }}
@@ -76,9 +76,10 @@ export function AppShell({ children }: { children: ReactNode }) {
       </main>
 
       {/* Side rail (desktop) */}
-      <nav className="fixed left-3 top-1/2 z-40 hidden -translate-y-1/2 md:block">
+      <nav className="fixed left-6 top-24 z-40 hidden md:block w-64">
         <HealthHud />
-        <ul className="hud-panel flex flex-col gap-1 p-2">
+        <div className="mt-6">
+          <ul className="hud-panel flex flex-col gap-1 p-2 w-fit">
           {NAV.map(({ to, label, icon: Icon }) => {
             const active = to === "/" ? path === "/" : path.startsWith(to);
             return (
@@ -98,7 +99,8 @@ export function AppShell({ children }: { children: ReactNode }) {
               </li>
             );
           })}
-        </ul>
+          </ul>
+        </div>
       </nav>
 
       {/* Bottom nav (mobile) */}

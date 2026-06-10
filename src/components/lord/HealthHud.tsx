@@ -3,7 +3,7 @@ import { HudPanel } from "./HudPanel";
 
 export function HealthHud() {
   return (
-    <HudPanel title="System Health" subtitle="Real-time status" className="mb-4">
+    <HudPanel title="System Health" subtitle="Real-time status" className="mb-4 w-64">
       <div className="grid grid-cols-3 gap-3 text-center">
         <div className="rounded-md border border-border/60 bg-background/40 p-2">
           <div className="flex items-center justify-center text-primary">

@@ -24,7 +24,6 @@ const MODES: Array<{ id: LordMode; label: string; icon: React.ComponentType<{ cl
 ];
 
 function ChatPage() {
-  const { user } = useAppContext();
   const [mode, setMode] = useState<LordMode>("balanced");
   const [input, setInput] = useState("");
   const scrollerRef = useRef<HTMLDivElement>(null);
@@ -32,7 +31,7 @@ function ChatPage() {
   const { messages, sendMessage, status, error } = useChat({
     transport: new DefaultChatTransport({
       api: `${getApiBaseUrl()}/api/chat`,
-      body: () => ({ mode, userId: user?.id }),
+      body: () => ({ mode }),
     }),
   });
 
@@ -84,11 +83,6 @@ function ChatPage() {
             <EmptyState />
           ) : (
             <ul className="space-y-4">
-              {!user && (
-                <li className="rounded-md border border-destructive/40 bg-destructive/10 p-3 text-xs text-destructive text-center">
-                  User not found. Please sign in to send messages.
-                </li>
-              )}
               {messages.map((m) => (
                 <li key={m.id} className={cn("flex gap-3", m.role === "user" ? "justify-end" : "justify-start")}>
                   {m.role === "assistant" && <Avatar />}
