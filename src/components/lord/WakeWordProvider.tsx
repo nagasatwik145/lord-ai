@@ -106,11 +106,14 @@ export function WakeWordProvider({ children }: { children: ReactNode }) {
       setStatus("thinking");
       setReply("");
       try {
+        // Use a consistent conversation ID for voice commands
+        const voiceConvoId = "voice-session";
         const res = await fetch("/api/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             mode: "fast",
+            conversationId: voiceConvoId,
             messages: [{ id: "u", role: "user", parts: [{ type: "text", text: cmd }] }],
           }),
         });
