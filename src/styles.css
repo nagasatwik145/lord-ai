@@ -216,3 +216,19 @@
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: oklch(0.82 0.18 210 / 0.3); border-radius: 8px; }
 ::-webkit-scrollbar-thumb:hover { background: oklch(0.82 0.18 210 / 0.5); }
+
+220	/* Custom Sidebar Scrollbar */
+221	.custom-scrollbar::-webkit-scrollbar {
+222	  width: 4px;
+223	}
+224	.custom-scrollbar::-webkit-scrollbar-track {
+225	  background: transparent;
+226	}
+227	.custom-scrollbar::-webkit-scrollbar-thumb {
+228	  background: var(--color-border);
+229	  border-radius: 10px;
+230	}
+231	.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+232	  background: var(--color-primary);
+233	}
+234	

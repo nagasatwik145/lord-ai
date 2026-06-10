@@ -13,6 +13,12 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { WakeWordProvider } from "../components/lord/WakeWordProvider";
 import { AppContextProvider } from "../components/lord/AppContextProvider";
+import { setupApiInterceptor } from "../lib/api-interceptor";
+
+// Initialize global monitoring
+if (typeof window !== "undefined") {
+  setupApiInterceptor();
+}
 
 function NotFoundComponent() {
   return (

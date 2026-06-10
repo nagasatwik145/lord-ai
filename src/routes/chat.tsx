@@ -6,7 +6,7 @@ import { Send, Loader2, Brain, Zap, Code, Sparkles, Gauge } from "lucide-react";
 import { AppShell } from "@/components/lord/AppShell";
 import { getApiBaseUrl } from "@/lib/api-config";
 import { HudPanel } from "@/components/lord/HudPanel";
-import { useAppContext } from "@/components/lord/AppContextProvider";
+import { useAppContext } from "@/components/lord/AppContextProvider"; // Keep for metrics/history context
 import { cn } from "@/lib/utils";
 import type { LordMode } from "@/lib/lord-config";
 
@@ -28,10 +28,20 @@ function ChatPage() {
   const [input, setInput] = useState("");
   const scrollerRef = useRef<HTMLDivElement>(null);
 
+  const { metrics, currentRoute, activeWorkflow, history } = useAppContext();
+  
   const { messages, sendMessage, status, error } = useChat({
     transport: new DefaultChatTransport({
       api: `${getApiBaseUrl()}/api/chat`,
-      body: () => ({ mode }),
+      body: () => ({ 
+        mode,
+        context: {
+          page: currentRoute,
+          workflow: activeWorkflow,
+          metrics,
+          history
+        }
+      }),
     }),
   });
 

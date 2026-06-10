@@ -19,18 +19,22 @@ export const Route = createFileRoute("/api/chat")({
         const body = (await request.json()) as {
           messages: UIMessage[];
           mode?: LordMode;
+          context?: any;
         };
         const mode: LordMode = body.mode && body.mode in LORD_MODELS ? body.mode : "balanced";
         const modelId = LORD_MODELS[mode];
 
+        // Construct enriched system prompt with application context
+        let systemPrompt = LORD_SYSTEM_PROMPT;
+        if (body.context) {
+          systemPrompt += `\n\nCURRENT APPLICATION CONTEXT:\n${JSON.stringify(body.context, null, 2)}`;
+        }
+
         try {
           const gateway = createOpenRouterProvider(apiKey);
-          console.log("Using OpenRouter");
-          console.log("Model:", modelId);
-          console.log("Key exists:", !!apiKey);
           const result = streamText({
             model: gateway(modelId),
-            system: LORD_SYSTEM_PROMPT,
+            system: systemPrompt,
             messages: await convertToModelMessages(body.messages),
           });
           return result.toUIMessageStreamResponse();
