@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import { getApiBaseUrl } from "@/lib/api-config";
-import { createWakeEngine, type WakeEngine } from "@/lib/voice";
+import type { WakeEngine } from "@/lib/voice/wake-engine";
 
 export type WakeStatus = "off" | "listening" | "heard" | "thinking" | "speaking" | "unsupported";
 
