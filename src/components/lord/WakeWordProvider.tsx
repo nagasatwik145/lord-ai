@@ -247,6 +247,7 @@ export function WakeWordProvider({ children }: { children: ReactNode }) {
     (async () => {
       try {
         setStatus("listening");
+        const { createWakeEngine } = await import("@/lib/voice");
         const eng = await createWakeEngine(() => {
           captureCommand();
         });
