@@ -80,7 +80,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
       { name: "theme-color", content: "#0a0e1a" },
       { title: "LORD AI OS — Intelligence Beyond Assistance" },
-      { name: "description", content: "Your personal futuristic AI operating system. Legendary Omni-intelligent Responsive Director." },
+      { name: "description", content: "LORD — the autonomous AI managing, monitoring, and optimizing your application." },
       { property: "og:title", content: "LORD AI OS" },
       { property: "og:description", content: "Intelligence Beyond Assistance." },
       { property: "og:type", content: "website" },

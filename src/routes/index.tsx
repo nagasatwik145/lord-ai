@@ -50,7 +50,7 @@ function Command() {
               <span className="gradient-text text-glow">LORD</span> at your service.
             </h1>
             <p className="mt-3 max-w-xl text-muted-foreground">
-              Legendary Omni-intelligent Responsive Director. Standing by, Sir. Issue a directive
+              The central intelligence layer of the platform. Standing by, Sir. Issue a directive
               or select a module to begin.
             </p>
             <div className="mt-5 flex flex-wrap gap-2">

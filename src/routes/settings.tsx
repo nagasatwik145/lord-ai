@@ -63,7 +63,7 @@ function SettingsPage() {
 
         <HudPanel title="About" className="md:col-span-2">
           <div className="font-display text-xl gradient-text text-glow">LORD AI</div>
-          <p className="mt-1 text-sm text-muted-foreground">Legendary Omni-intelligent Responsive Director.</p>
+          <p className="mt-1 text-sm text-muted-foreground">The autonomous AI intelligence layer of this platform.</p>
           <p className="mt-3 text-xs font-mono text-muted-foreground">Built for a single operator.</p>
         </HudPanel>
       </div>
