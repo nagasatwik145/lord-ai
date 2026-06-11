@@ -44,7 +44,9 @@ export function AppContextProvider({ children }: { children: ReactNode }) {
       setEvents(newEvents);
     });
 
-    return unsubscribe;
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   useEffect(() => {
