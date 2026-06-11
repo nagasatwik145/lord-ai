@@ -6,7 +6,7 @@ import { Send, Loader2, Brain, Zap, Code, Sparkles, Gauge, LayoutPanelLeft } fro
 import { AppShell } from "@/components/lord/AppShell";
 import { getApiBaseUrl } from "@/lib/api-config";
 import { HudPanel } from "@/components/lord/HudPanel";
-import { useAppContext } from "@/components/lord/AppContextProvider"; // Keep for metrics/history context
+import { useAppContext } from "@/components/lord/AppContextProvider";
 import { cn } from "@/lib/utils";
 import type { LordMode } from "@/lib/lord-config";
 import { ChatSidebar } from "@/components/lord/ChatSidebar";
@@ -183,7 +183,7 @@ function ChatPage() {
             <button
               type="submit"
               disabled={busy || !input.trim()}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-md bg-primary text-primary-foreground shadow-[0_0_18px_var(--hud)] transition hover:scale-105 disabled:cursor-not-allowed disabled:opacity-40"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-md bg-primary text-primary-foreground shadow-[0_0_18px_var(--hud)] transition hover:scale-105 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
             </button>
