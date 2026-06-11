@@ -19,7 +19,7 @@ export const Route = createFileRoute("/api/chat")({
         const body = (await request.json()) as {
           messages: UIMessage[];
           mode?: LordMode;
-          context?: any;
+          context?: unknown;
           conversationId?: string;
         };
         const mode: LordMode = body.mode && body.mode in LORD_MODELS ? body.mode : "balanced";
@@ -33,27 +33,34 @@ export const Route = createFileRoute("/api/chat")({
         }
 
         try {
-          const { addMessage, createConversation, updateConversationTitle } = await import("@/lib/db/queries");
-          
-          // Save user message if conversationId exists
-          if (conversationId) {
+          // Persistence is best-effort: a missing/unavailable database must
+          // never block the AI response.
+          let persist: typeof import("@/lib/db/queries") | null = null;
+          try {
+            persist = await import("@/lib/db/queries");
+          } catch (e) {
+            console.error("[chat] history persistence unavailable:", e);
+          }
+
+          if (persist && conversationId) {
             const lastUserMessage = body.messages[body.messages.length - 1];
             if (lastUserMessage && lastUserMessage.role === "user") {
-              const content = lastUserMessage.parts.map(p => p.type === "text" ? p.text : "").join("");
-              
-              // Ensure conversation exists
+              const content = lastUserMessage.parts
+                .map((p) => (p.type === "text" ? p.text : ""))
+                .join("");
               try {
-                await createConversation(conversationId, "New Conversation");
+                // Ensure conversation exists
+                await persist
+                  .createConversation(conversationId, "New Conversation")
+                  .catch(() => {});
+                await persist.addMessage(conversationId, "user", content);
+                // If it's the first message, update title
+                if (body.messages.length === 1) {
+                  const title = content.slice(0, 40) + (content.length > 40 ? "..." : "");
+                  await persist.updateConversationTitle(conversationId, title);
+                }
               } catch (e) {
-                // Ignore if already exists
-              }
-              
-              await addMessage(conversationId, "user", content);
-              
-              // If it's the first message, update title
-              if (body.messages.length === 1) {
-                const title = content.slice(0, 40) + (content.length > 40 ? "..." : "");
-                await updateConversationTitle(conversationId, title);
+                console.error("[chat] failed to persist user message:", e);
               }
             }
           }
@@ -64,10 +71,12 @@ export const Route = createFileRoute("/api/chat")({
             system: systemPrompt,
             messages: await convertToModelMessages(body.messages),
             onFinish: async ({ text }) => {
-              if (conversationId) {
-                await addMessage(conversationId, "assistant", text, modelId);
+              if (persist && conversationId) {
+                await persist
+                  .addMessage(conversationId, "assistant", text, modelId)
+                  .catch((e) => console.error("[chat] failed to persist assistant message:", e));
               }
-            }
+            },
           });
           return result.toUIMessageStreamResponse();
         } catch (err) {
