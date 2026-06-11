@@ -40,15 +40,19 @@ LORD is an advanced, autonomous AI application designed to function as the centr
    ```
 
 3. Configure environment variables:
-   Create a `.env` file in the root directory:
+   Copy `.env.example` to `.env` and fill in the values:
    ```env
-   OPENROUTER_API_KEY=your_api_key
+   OPENROUTER_API_KEY=your_openrouter_key        # required for chat (https://openrouter.ai/settings/keys)
+   SUPABASE_URL=https://<project>.supabase.co    # required for persistent chat history
+   SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+   SUPABASE_PUBLISHABLE_KEY=your_anon_key
+   VITE_SUPABASE_URL=https://<project>.supabase.co
+   VITE_SUPABASE_PUBLISHABLE_KEY=your_anon_key
    ```
+   Without the Supabase variables the app still runs and chat works, but conversation history is not persisted.
 
-4. Setup the database:
-   ```bash
-   npx drizzle-kit push
-   ```
+4. Setup the database (Supabase):
+   Apply the SQL in `supabase/migrations/` to your Supabase project (e.g. via the SQL editor or `supabase db push`).
 
 5. Start the development server:
    ```bash
