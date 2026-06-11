@@ -13,11 +13,18 @@ import { ChatSidebar } from "@/components/lord/ChatSidebar";
 import { getConversationFn } from "@/lib/chat-history.functions";
 
 export const Route = createFileRoute("/chat")({
-  head: () => ({ meta: [{ title: "LORD — Chat" }, { name: "description", content: "Talk to LORD AI." }] }),
+  head: () => ({
+    meta: [{ title: "LORD — Chat" }, { name: "description", content: "Talk to LORD AI." }],
+  }),
   component: ChatPage,
 });
 
-const MODES: Array<{ id: LordMode; label: string; icon: React.ComponentType<{ className?: string }>; hint: string }> = [
+const MODES: Array<{
+  id: LordMode;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+  hint: string;
+}> = [
   { id: "fast", label: "Fast", icon: Zap, hint: "Quick answers" },
   { id: "balanced", label: "Balanced", icon: Gauge, hint: "Daily driver" },
   { id: "reasoning", label: "Reason", icon: Brain, hint: "Deep thinking" },
@@ -28,37 +35,48 @@ const MODES: Array<{ id: LordMode; label: string; icon: React.ComponentType<{ cl
 function ChatPage() {
   const [mode, setMode] = useState<LordMode>("balanced");
   const [input, setInput] = useState("");
-  const [conversationId, setConversationId] = useState<string>(() => Math.random().toString(36).slice(2) + Date.now().toString(36));
+  const [conversationId, setConversationId] = useState<string>(
+    () => Math.random().toString(36).slice(2) + Date.now().toString(36),
+  );
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const scrollerRef = useRef<HTMLDivElement>(null);
 
   const { metrics, currentRoute, activeWorkflow, history } = useAppContext();
-  
+
   const { messages, setMessages, sendMessage, status, error } = useChat({
     transport: new DefaultChatTransport({
       api: "/api/chat",
-      body: () => ({ 
+      body: () => ({
         mode,
         conversationId,
         context: {
           page: currentRoute,
           workflow: activeWorkflow,
           metrics,
-          history
-        }
+          history,
+        },
       }),
     }),
   });
 
   const loadConversation = async (id: string) => {
     setConversationId(id);
-    const data = (await getConversationFn({ data: id })) as { messages?: Array<{ id: string; role: string; content: string }> } | null;
-    if (data?.messages) {
-      setMessages(data.messages.map((m) => ({
-        id: m.id,
-        role: m.role as "user" | "assistant" | "system",
-        parts: [{ type: "text", text: m.content }]
-      })));
+    try {
+      const data = (await getConversationFn({ data: id })) as {
+        messages?: Array<{ id: string; role: string; content: string }>;
+      } | null;
+      if (data?.messages) {
+        setMessages(
+          data.messages.map((m) => ({
+            id: m.id,
+            role: m.role as "user" | "assistant" | "system",
+            parts: [{ type: "text", text: m.content }],
+          })),
+        );
+      }
+    } catch (error) {
+      console.error("[chat] Failed to load conversation:", error);
+      setMessages([]);
     }
   };
 
@@ -87,14 +105,18 @@ function ChatPage() {
         {/* Sidebar */}
         {sidebarOpen && (
           <div className="hidden w-72 flex-shrink-0 lg:block">
-            <ChatSidebar currentId={conversationId} onSelect={loadConversation} onNew={startNewChat} />
+            <ChatSidebar
+              currentId={conversationId}
+              onSelect={loadConversation}
+              onNew={startNewChat}
+            />
           </div>
         )}
 
         <div className="flex flex-1 flex-col gap-4 overflow-hidden">
           {/* Header */}
           <div className="flex items-center gap-4">
-            <button 
+            <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
               className="hidden rounded-md border border-border/60 bg-background/40 p-2 text-muted-foreground transition hover:text-primary lg:block"
             >
@@ -103,7 +125,9 @@ function ChatPage() {
 
             {/* Mode selector */}
             <div className="hud-panel flex flex-1 flex-wrap items-center gap-1 p-2">
-              <span className="px-2 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Mode</span>
+              <span className="px-2 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                Mode
+              </span>
               {MODES.map((m) => {
                 const Icon = m.icon;
                 const active = mode === m.id;
@@ -134,7 +158,13 @@ function ChatPage() {
             ) : (
               <ul className="space-y-4">
                 {messages.map((m) => (
-                  <li key={m.id} className={cn("flex gap-3", m.role === "user" ? "justify-end" : "justify-start")}>
+                  <li
+                    key={m.id}
+                    className={cn(
+                      "flex gap-3",
+                      m.role === "user" ? "justify-end" : "justify-start",
+                    )}
+                  >
                     {m.role === "assistant" && <Avatar />}
                     <div
                       className={cn(
@@ -196,7 +226,10 @@ function ChatPage() {
 
 function Avatar() {
   return (
-    <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full" style={{ background: "var(--gradient-hud)", boxShadow: "0 0 12px var(--hud)" }}>
+    <div
+      className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full"
+      style={{ background: "var(--gradient-hud)", boxShadow: "0 0 12px var(--hud)" }}
+    >
       <span className="font-display text-[10px] font-bold text-background">L</span>
     </div>
   );
@@ -217,7 +250,10 @@ function EmptyState() {
       </p>
       <div className="grid w-full max-w-xl gap-2 sm:grid-cols-2">
         {suggestions.map((s) => (
-          <div key={s} className="rounded-md border border-border/60 bg-background/40 p-3 text-left text-xs text-muted-foreground">
+          <div
+            key={s}
+            className="rounded-md border border-border/60 bg-background/40 p-3 text-left text-xs text-muted-foreground"
+          >
             {s}
           </div>
         ))}
