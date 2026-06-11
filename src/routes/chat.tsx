@@ -52,11 +52,11 @@ function ChatPage() {
 
   const loadConversation = async (id: string) => {
     setConversationId(id);
-    const data = await getConversationFn({ data: id });
-    if (data) {
-      setMessages(data.messages.map((m: any) => ({
+    const data = (await getConversationFn({ data: id })) as { messages?: Array<{ id: string; role: string; content: string }> } | null;
+    if (data?.messages) {
+      setMessages(data.messages.map((m) => ({
         id: m.id,
-        role: m.role,
+        role: m.role as "user" | "assistant" | "system",
         parts: [{ type: "text", text: m.content }]
       })));
     }
