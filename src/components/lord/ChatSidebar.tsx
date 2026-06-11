@@ -16,7 +16,7 @@ export function ChatSidebar({ currentId, onSelect, onNew }: ChatSidebarProps) {
 
   const load = async () => {
     const data = await getConversationsFn();
-    setConversations(data);
+    setConversations(Array.isArray(data) ? data : (data?.conversations ?? []));
   };
 
   useEffect(() => {
