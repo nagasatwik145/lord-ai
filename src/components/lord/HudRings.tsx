@@ -1,68 +1,48 @@
+import React, { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 
 interface HudRingsProps {
-  state?: "idle" | "listening" | "thinking" | "speaking";
   size?: number;
-  className?: string;
+  state?: "idle" | "listening" | "processing" | "speaking";
 }
 
-/** Animated arc-reactor rings for voice / status indicator */
-export function HudRings({ state = "idle", size = 220, className }: HudRingsProps) {
-  const colors: Record<string, string> = {
-    idle: "var(--hud)",
-    listening: "var(--hud-success)",
-    thinking: "var(--accent)",
-    speaking: "var(--hud-glow)",
+export function HudRings({ size = 200, state = "idle" }: HudRingsProps) {
+  const [rotation, setRotation] = useState(0);
+
+  useEffect(() => {
+    if (state === "idle" || state === "listening") {
+      const interval = setInterval(() => {
+        setRotation((prev) => (prev + 2) % 360);
+      }, 50);
+      return () => clearInterval(interval);
+    }
+  }, [state]);
+
+  const getAnimationClass = () => {
+    switch (state) {
+      case "listening":
+        return "animate-pulse";
+      case "processing":
+        return "";
+      case "speaking":
+        return "animate-bounce";
+      default:
+        return "";
+    }
   };
-  const color = colors[state];
 
   return (
-    <div
-      className={cn("relative", className)}
-      style={{ width: size, height: size }}
-    >
-      {/* outer rotating ring */}
-      <svg
-        className="absolute inset-0 animate-ring-rotate"
-        viewBox="0 0 100 100"
-        style={{ filter: `drop-shadow(0 0 12px ${color})` }}
-      >
-        <circle cx="50" cy="50" r="46" fill="none" stroke={color} strokeWidth="0.5" strokeDasharray="2 4" opacity="0.6" />
-        <circle cx="50" cy="50" r="46" fill="none" stroke={color} strokeWidth="0.3" strokeDasharray="20 80" opacity="0.9" />
+    <div className="flex items-center justify-center" style={{ width: size, height: size }}>
+      <svg viewBox="0 0 200 200" className={cn("w-full h-full", getAnimationClass())} style={{ transform: `rotate(${rotation}deg)` }}>
+        {/* Outer ring */}
+        <circle cx="100" cy="100" r="90" fill="none" stroke="var(--hud)" strokeWidth="1" opacity="0.3" />
+        {/* Middle ring */}
+        <circle cx="100" cy="100" r="60" fill="none" stroke="var(--hud)" strokeWidth="1" opacity="0.5" />
+        {/* Inner ring */}
+        <circle cx="100" cy="100" r="30" fill="none" stroke="var(--hud)" strokeWidth="2" opacity="0.8" />
+        {/* Center dot */}
+        <circle cx="100" cy="100" r="4" fill="var(--hud)" filter="drop-shadow(0 0 4px var(--hud))" />
       </svg>
-      {/* inner counter-rotating ring */}
-      <svg className="absolute inset-2 animate-ring-rotate-reverse" viewBox="0 0 100 100">
-        <circle cx="50" cy="50" r="40" fill="none" stroke={color} strokeWidth="0.4" strokeDasharray="1 3" opacity="0.5" />
-        <circle cx="50" cy="50" r="40" fill="none" stroke={color} strokeWidth="0.6" strokeDasharray="40 200" opacity="0.8" />
-      </svg>
-      {/* core */}
-      <div
-        className={cn(
-          "absolute inset-0 m-auto rounded-full",
-          state !== "idle" && "animate-pulse-glow",
-        )}
-        style={{
-          width: size * 0.35,
-          height: size * 0.35,
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          background: `radial-gradient(circle, ${color} 0%, transparent 70%)`,
-          boxShadow: `0 0 40px ${color}, inset 0 0 20px ${color}`,
-        }}
-      />
-      <div
-        className="absolute rounded-full"
-        style={{
-          width: size * 0.15,
-          height: size * 0.15,
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          background: color,
-          boxShadow: `0 0 30px ${color}`,
-        }}
-      />
     </div>
   );
 }

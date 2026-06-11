@@ -1,40 +1,25 @@
-import type { ReactNode } from "react";
+import { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 interface HudPanelProps {
-  title?: string;
+  title: string;
   subtitle?: string;
-  children: ReactNode;
   className?: string;
   action?: ReactNode;
+  children: ReactNode;
 }
 
-/** Reusable HUD panel with corner brackets and title bar */
-export function HudPanel({ title, subtitle, children, className, action }: HudPanelProps) {
+export function HudPanel({ title, subtitle, className, action, children }: HudPanelProps) {
   return (
-    <section className={cn("hud-panel relative p-4 md:p-5", className)}>
-      {/* Corner brackets */}
-      <span className="pointer-events-none absolute -left-px -top-px h-3 w-3 border-l-2 border-t-2 border-primary" />
-      <span className="pointer-events-none absolute -right-px -top-px h-3 w-3 border-r-2 border-t-2 border-primary" />
-      <span className="pointer-events-none absolute -bottom-px -left-px h-3 w-3 border-b-2 border-l-2 border-primary" />
-      <span className="pointer-events-none absolute -bottom-px -right-px h-3 w-3 border-b-2 border-r-2 border-primary" />
-
-      {(title || action) && (
-        <header className="mb-3 flex items-start justify-between gap-3 border-b border-border/60 pb-2">
-          <div>
-            {title && (
-              <h3 className="font-display text-sm font-semibold uppercase tracking-[0.18em] text-primary text-glow">
-                {title}
-              </h3>
-            )}
-            {subtitle && (
-              <p className="mt-0.5 text-xs text-muted-foreground">{subtitle}</p>
-            )}
-          </div>
-          {action}
-        </header>
-      )}
-      {children}
-    </section>
+    <div className={cn("rounded-lg border border-border/60 bg-background/40 p-4 backdrop-blur-sm", className)}>
+      <div className="mb-3 flex items-center justify-between gap-2">
+        <div>
+          <h3 className="font-display text-sm font-semibold uppercase tracking-wider text-foreground">{title}</h3>
+          {subtitle && <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">{subtitle}</p>}
+        </div>
+        {action}
+      </div>
+      <div className="text-sm">{children}</div>
+    </div>
   );
 }

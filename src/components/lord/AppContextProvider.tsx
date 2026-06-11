@@ -1,83 +1,62 @@
-import { createContext, useContext, useState, useEffect, type ReactNode } from "react";
-import { useLocation } from "@tanstack/react-router";
-import { monitoring, type SystemMetrics, type AppEvent } from "@/lib/monitoring-service";
+import type React from "react";
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { monitoring } from "@/lib/monitoring-service";
 
-interface AppContextType {
-  user: { id: string; name: string } | null;
-  setUser: (user: { id: string; name: string } | null) => void;
-  isLoading: boolean;
-  metrics: SystemMetrics;
-  events: AppEvent[];
+export interface AppContextType {
+  metrics: {
+    latency: number;
+    uptime: number;
+    apiStatus: string;
+    dbStatus: string;
+    authStatus: string;
+    errorCount: number;
+  };
   currentRoute: string;
-  history: string[];
   activeWorkflow: string | null;
-  setActiveWorkflow: (workflow: string | null) => void;
+  history: Array<{ timestamp: number; action: string; data?: unknown }>;
 }
 
-const AppContext = createContext<AppContextType | null>(null);
+const AppContext = createContext<AppContextType | undefined>(undefined);
+
+export function AppContextProvider({ children }: { children: ReactNode }) {
+  const [metrics, setMetrics] = useState({
+    latency: 0,
+    uptime: 0,
+    apiStatus: "online",
+    dbStatus: "online",
+    authStatus: "online",
+    errorCount: 0,
+  });
+  const [currentRoute, setCurrentRoute] = useState("/");
+  const [activeWorkflow, setActiveWorkflow] = useState<string | null>(null);
+  const [history, setHistory] = useState<Array<{ timestamp: number; action: string; data?: unknown }>>([]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const health = monitoring.getHealthStatus();
+      setMetrics((prev) => ({
+        ...prev,
+        uptime: Math.floor(performance.now() / 1000),
+        apiStatus: health === "healthy" ? "online" : health === "warning" ? "degraded" : "offline",
+      }));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const value: AppContextType = {
+    metrics,
+    currentRoute,
+    activeWorkflow,
+    history,
+  };
+
+  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
+}
 
 export function useAppContext() {
   const context = useContext(AppContext);
   if (!context) {
-    throw new Error("useAppContext must be used within an AppContextProvider");
+    throw new Error("useAppContext must be used within AppContextProvider");
   }
   return context;
-}
-
-export function AppContextProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<{ id: string; name: string } | null>({
-    id: "1",
-    name: "Commander",
-  });
-  const [isLoading] = useState(false);
-  const [metrics, setMetrics] = useState<SystemMetrics>(monitoring.getMetrics());
-  const [events, setEvents] = useState<AppEvent[]>(monitoring.getRecentEvents());
-  const [history, setHistory] = useState<string[]>([]);
-  const [activeWorkflow, setActiveWorkflow] = useState<string | null>(null);
-  
-  const location = useLocation();
-  const currentRoute = location.pathname;
-
-  useEffect(() => {
-    const unsubscribe = monitoring.subscribe((newMetrics, newEvents) => {
-      setMetrics(newMetrics);
-      setEvents(newEvents);
-    });
-
-    return () => {
-      unsubscribe();
-    };
-  }, []);
-
-  useEffect(() => {
-    setHistory(prev => {
-      const newHistory = [...prev, currentRoute];
-      return newHistory.slice(-10); // Keep last 10 routes
-    });
-
-    monitoring.logEvent({
-      type: "navigation",
-      category: "router",
-      message: `Navigated to ${currentRoute}`,
-      metadata: { path: currentRoute }
-    });
-  }, [currentRoute]);
-
-  return (
-    <AppContext.Provider 
-      value={{ 
-        user, 
-        setUser, 
-        isLoading, 
-        metrics, 
-        events, 
-        currentRoute, 
-        history,
-        activeWorkflow,
-        setActiveWorkflow
-      }}
-    >
-      {children}
-    </AppContext.Provider>
-  );
 }
