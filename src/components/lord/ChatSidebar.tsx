@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Plus, MessageSquare, Trash2, Edit2, Check, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { getConversationsFn, deleteConversationFn, updateConversationTitleFn } from "@/lib/chat-history.server";
+import { getConversationsFn, deleteConversationFn, updateConversationTitleFn } from "@/lib/chat-history.functions";
 
 interface ChatSidebarProps {
   currentId?: string;

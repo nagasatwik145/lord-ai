@@ -10,7 +10,7 @@ import { useAppContext } from "@/components/lord/AppContextProvider"; // Keep fo
 import { cn } from "@/lib/utils";
 import type { LordMode } from "@/lib/lord-config";
 import { ChatSidebar } from "@/components/lord/ChatSidebar";
-import { getConversationFn } from "@/lib/chat-history.server";
+import { getConversationFn } from "@/lib/chat-history.functions";
 
 export const Route = createFileRoute("/chat")({
   head: () => ({ meta: [{ title: "LORD — Chat" }, { name: "description", content: "Talk to LORD AI." }] }),
