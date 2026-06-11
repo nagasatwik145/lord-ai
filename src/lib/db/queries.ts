@@ -1,45 +1,91 @@
-import { db } from "./index";
-import { conversations, messages } from "./schema";
-import { desc, eq, sql } from "drizzle-orm";
+/**
+ * Server-only chat history helpers backed by Lovable Cloud (Postgres).
+ * Imported by the /api/chat server route to persist messages as they stream.
+ * Uses the service-role admin client; never import this file from client code.
+ */
+
+async function admin() {
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  return supabaseAdmin;
+}
 
 export async function getConversations() {
-  return db.select().from(conversations).orderBy(desc(conversations.updatedAt));
+  const sb = await admin();
+  const { data, error } = await sb
+    .from("conversations")
+    .select("*")
+    .order("updated_at", { ascending: false });
+  if (error) throw error;
+  return data ?? [];
 }
 
 export async function getConversation(id: string) {
-  const result = db.select().from(conversations).where(eq(conversations.id, id)).get();
-  if (!result) return null;
-
-  const msgList = db.select().from(messages).where(eq(messages.conversationId, id)).orderBy(messages.createdAt).all();
-  return { ...result, messages: msgList };
+  const sb = await admin();
+  const { data: conv } = await sb.from("conversations").select("*").eq("id", id).maybeSingle();
+  if (!conv) return null;
+  const { data: msgs } = await sb
+    .from("messages")
+    .select("*")
+    .eq("conversation_id", id)
+    .order("created_at", { ascending: true });
+  return { ...conv, messages: msgs ?? [] };
 }
 
 export async function createConversation(id: string, title: string) {
-  return db.insert(conversations).values({ id, title }).returning().get();
+  const sb = await admin();
+  const { data, error } = await sb
+    .from("conversations")
+    .insert({ id, title })
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
 }
 
 export async function updateConversationTitle(id: string, title: string) {
-  return db.update(conversations).set({ title, updatedAt: new Date() }).where(eq(conversations.id, id)).returning().get();
+  const sb = await admin();
+  const { data, error } = await sb
+    .from("conversations")
+    .update({ title, updated_at: new Date().toISOString() })
+    .eq("id", id)
+    .select()
+    .maybeSingle();
+  if (error) throw error;
+  return data;
 }
 
 export async function deleteConversation(id: string) {
-  return db.delete(conversations).where(eq(conversations.id, id)).returning().get();
+  const sb = await admin();
+  const { data, error } = await sb
+    .from("conversations")
+    .delete()
+    .eq("id", id)
+    .select()
+    .maybeSingle();
+  if (error) throw error;
+  return data;
 }
 
-export async function addMessage(conversationId: string, role: "user" | "assistant" | "system", content: string, model?: string) {
+export async function addMessage(
+  conversationId: string,
+  role: "user" | "assistant" | "system",
+  content: string,
+  model?: string,
+) {
+  const sb = await admin();
   const id = Math.random().toString(36).slice(2) + Date.now().toString(36);
-  
-  // Update conversation timestamp
-  db.update(conversations)
-    .set({ updatedAt: new Date() })
-    .where(eq(conversations.id, conversationId))
-    .run();
 
-  return db.insert(messages).values({
-    id,
-    conversationId,
-    role,
-    content,
-    model
-  }).returning().get();
+  // bump conversation timestamp (fire-and-forget; don't block the insert)
+  void sb
+    .from("conversations")
+    .update({ updated_at: new Date().toISOString() })
+    .eq("id", conversationId);
+
+  const { data, error } = await sb
+    .from("messages")
+    .insert({ id, conversation_id: conversationId, role, content, model: model ?? null })
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
 }
