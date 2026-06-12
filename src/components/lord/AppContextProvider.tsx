@@ -29,7 +29,9 @@ export function AppContextProvider({ children }: { children: ReactNode }) {
   });
   const [currentRoute, setCurrentRoute] = useState("/");
   const [activeWorkflow, setActiveWorkflow] = useState<string | null>(null);
-  const [history, setHistory] = useState<Array<{ timestamp: number; action: string; data?: unknown }>>([]);
+  const [history, setHistory] = useState<
+    Array<{ timestamp: number; action: string; data?: unknown }>
+  >([]);
 
   useEffect(() => {
     const interval = setInterval(() => {

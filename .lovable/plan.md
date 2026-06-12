@@ -1,9 +1,11 @@
 ## Plan: App-Wide "Hey Lord" Wake Word
 
 ### What this delivers
+
 "Hey Lord" listens on **every page** of the app (Command, Chat, Study, etc.), not just the Voice page. When detected, LORD activates, listens for your command, and responds with voice. A persistent mic indicator shows status.
 
 ### Honest limitations (web platform)
+
 - Works only while the LORD tab/PWA is **open and foregrounded**
 - Cannot wake from a **locked phone** or when the app is closed (Siri/Google have OS-level privileges no web app can access)
 - iOS Safari requires one initial tap to grant mic permission per session
@@ -43,12 +45,14 @@
    - Becomes a "voice console" showing live transcript and conversation log
 
 ### Technical notes
+
 - Web Speech API (`webkitSpeechRecognition`) — Chrome/Edge/Safari supported, Firefox not
 - Single recognizer instance prevents the "already started" errors common with multiple mounts
 - Graceful fallback message if browser lacks support
 - No new dependencies needed
 
 ### Files touched
+
 - `src/components/lord/WakeWordProvider.tsx` (new)
 - `src/components/lord/WakeIndicator.tsx` (new)
 - `src/components/lord/AppShell.tsx` (mount indicator)

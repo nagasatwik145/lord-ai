@@ -59,10 +59,13 @@ export function ChatSidebar({ currentId, onSelect, onNew }: ChatSidebarProps) {
                 "group rounded-md border px-2 py-1.5 text-xs cursor-pointer transition",
                 currentId === conv.id
                   ? "bg-primary/20 border-primary/60"
-                  : "border-border/40 bg-background/20 hover:bg-background/40"
+                  : "border-border/40 bg-background/20 hover:bg-background/40",
               )}
             >
-              <div onClick={() => onSelect(conv.id)} className="flex items-start gap-2 justify-between">
+              <div
+                onClick={() => onSelect(conv.id)}
+                className="flex items-start gap-2 justify-between"
+              >
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-1">
                     <MessageSquare className="h-3 w-3 flex-shrink-0" />

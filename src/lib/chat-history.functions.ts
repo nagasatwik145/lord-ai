@@ -17,7 +17,10 @@ export const getConversationsFn = createServerFn({ method: "GET" }).handler(asyn
     .limit(100);
   if (error) {
     console.error("[chat-history] getConversations:", error);
-    return { conversations: [] as Array<{ id: string; title: string; updatedAt: string }>, error: error.message };
+    return {
+      conversations: [] as Array<{ id: string; title: string; updatedAt: string }>,
+      error: error.message,
+    };
   }
   return {
     conversations: (data ?? []).map((c) => ({ id: c.id, title: c.title, updatedAt: c.updated_at })),

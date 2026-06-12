@@ -9,9 +9,7 @@ const WakeWordContext = createContext<{ isListening: boolean } | undefined>(unde
 
 export function WakeWordProvider({ children }: { children: ReactNode }) {
   return (
-    <WakeWordContext.Provider value={{ isListening: false }}>
-      {children}
-    </WakeWordContext.Provider>
+    <WakeWordContext.Provider value={{ isListening: false }}>{children}</WakeWordContext.Provider>
   );
 }
 

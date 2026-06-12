@@ -33,11 +33,7 @@ export async function getConversation(id: string) {
 
 export async function createConversation(id: string, title: string) {
   const sb = await admin();
-  const { data, error } = await sb
-    .from("conversations")
-    .insert({ id, title })
-    .select()
-    .single();
+  const { data, error } = await sb.from("conversations").insert({ id, title }).select().single();
   if (error) throw error;
   return data;
 }
